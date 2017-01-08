@@ -36,6 +36,7 @@ public:
 	void on_pushButtonBrowseBackupDestination_clicked();
 
 private:
+	bool saveSettingsToCfg();
 	bool askToSaveSettings();
 
 	Ui::MainWindow *ui;

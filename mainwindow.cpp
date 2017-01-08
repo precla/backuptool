@@ -80,7 +80,7 @@ bool MainWindow::askToSaveSettings() {
 	return true;
 }
 
-bool saveSettingsToCfg() {
+bool MainWindow::saveSettingsToCfg() {
 	return true;
 }
 
