@@ -139,12 +139,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="aboutdialog.cpp" />
+    <ClCompile Include="compression.cpp" />
     <ClCompile Include="Debug\moc_aboutdialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Debug\moc_mainwindow.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="ftp.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow.cpp" />
     <ClCompile Include="Release\moc_mainwindow.cpp">
@@ -203,6 +205,8 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="compression.h" />
+    <ClInclude Include="ftp.h" />
     <ClInclude Include="GeneratedFiles\ui_aboutdialog.h" />
     <ClInclude Include="GeneratedFiles\ui_mainwindow.h" />
   </ItemGroup>
