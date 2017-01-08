@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "aboutdialog.h"
+#include "compression.h"
+#include "ftp.h"
 #include "GeneratedFiles\ui_mainwindow.h"
 #include "GeneratedFiles\ui_aboutdialog.h"
 
