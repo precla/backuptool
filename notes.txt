@@ -1,0 +1,40 @@
+settings to get for config file:
+
+	folders in list:
+		listWidgetFoldersToBackup
+		comboBoxBackupType
+
+	Backup settings:
+	backup type:
+		comboBoxBackupType
+		checkBoxCompressionTrue
+		spinBoxBackupFrequencyPerDay
+
+	days to backup:
+		checkBoxEveryDay
+			checkBoxMon
+			checkBoxTue
+			checkBoxWed
+			checkBoxThu
+			checkBoxFri
+			checkBoxSat
+			checkBoxSun
+
+		(only if checkBoxCompressionTrue true)
+		comboBoxCompressionLevel
+		checkBoxCompressionMultipleParts
+		compressionSizeCustom
+		comboBoxCompressionSizeType (KB, MB..)
+
+	Backup destination:
+		checkBoxLocalBackup
+			(only if above true)
+			lineBackupFolderLocal
+		
+		checkBoxRemoteBackup
+			(only if above true)
+			lineEditFtpIp
+			lineEditFtpPort
+			lineEditFtpUsername
+			lineEditFtpPassword
+			lineEditFtpDirectory
