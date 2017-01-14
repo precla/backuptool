@@ -160,17 +160,33 @@ void MainWindow::on_pushButtonRemoveFolder_clicked() {
 void MainWindow::on_pushButtonBrowseBackupDestination_clicked() {
 	QString dirAdd = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
 														  QDir::homePath(), QFileDialog::ShowDirsOnly);
-	QFile testWriteFile(dirAdd + '/' + "testFileBCKP");
+	
+	// If backup destination folder is a Parent or child of backup fodlers, don't use it!
+	for (int i = 0; i < ui->listWidgetFoldersToBackup->count(); ++i) {
+
+		if (dirAdd.indexOf(ui->listWidgetFoldersToBackup->item(i)->text() + "/") != -1) {
+			QMessageBox::information(this, "Attention",
+				"The selected folder can't be set as backup destination because one of the chosen folders above is a parent or a child of this folder.", 0x00000400);	// 0x00000400 ==>> StandardButtons button = Ok
+			return;
+		}
+	}
+
+	/* remove or comment from here to testWriteFile.remove(); for production/release
+	   the following lines have been used for debugging *
+	QFile testWriteFile(dirAdd + '/' + "testFileBCKP_Log.txt");
 	
 	if (testWriteFile.open(QIODevice::ReadWrite)) {
 		// write to a log file that folder is writeable
+		QTextStream stream(&testWriteFile);
+		stream << QDateTime::currentDateTime().toString() << endl;
 	}
 	testWriteFile.close();
 	testWriteFile.remove();
+	/* remove or comment to here for production/release */
 
 	if (!dirAdd.isEmpty()) {
 		ui->lineBackupFolderLocal->insert(dirAdd);
 	} else {
-		QMessageBox::information(this, "Attention", "Error while adding folder.", 0x00000400);
+		QMessageBox::information(this, "Attention", "No destination Folder selected.", 0x00000400);
 	}
 }
