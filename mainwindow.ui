@@ -1092,7 +1092,7 @@
     <property name="title">
      <string>Quote of backupTool:</string>
     </property>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -1200,6 +1200,38 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>listWidgetFoldersToBackup</tabstop>
+  <tabstop>pushButtonAddFolder</tabstop>
+  <tabstop>pushButtonRemoveFolder</tabstop>
+  <tabstop>comboBoxBackupType</tabstop>
+  <tabstop>checkBoxCompressionTrue</tabstop>
+  <tabstop>spinBoxBackupFrequencyPerDay</tabstop>
+  <tabstop>checkBoxMon</tabstop>
+  <tabstop>checkBoxTue</tabstop>
+  <tabstop>checkBoxWed</tabstop>
+  <tabstop>checkBoxThu</tabstop>
+  <tabstop>checkBoxFri</tabstop>
+  <tabstop>checkBoxSat</tabstop>
+  <tabstop>checkBoxSun</tabstop>
+  <tabstop>checkBoxEveryDay</tabstop>
+  <tabstop>comboBoxCompressionLevel</tabstop>
+  <tabstop>checkBoxCompressionMultipleParts</tabstop>
+  <tabstop>compressionSizeCustom</tabstop>
+  <tabstop>comboBoxCompressionSizeType</tabstop>
+  <tabstop>checkBoxLocalBackup</tabstop>
+  <tabstop>pushButtonBrowseBackupDestination</tabstop>
+  <tabstop>lineBackupFolderLocal</tabstop>
+  <tabstop>checkBoxRemoteBackup</tabstop>
+  <tabstop>lineEditFtpIp</tabstop>
+  <tabstop>lineEditFtpPort</tabstop>
+  <tabstop>lineEditFtpUsername</tabstop>
+  <tabstop>lineEditFtpPassword</tabstop>
+  <tabstop>lineEditFtpDirectory</tabstop>
+  <tabstop>buttonCancelBackup</tabstop>
+  <tabstop>buttonViewErrorLog</tabstop>
+  <tabstop>textOutputOfBackup</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -1369,8 +1401,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>49</x>
-     <y>398</y>
+     <x>51</x>
+     <y>421</y>
     </hint>
     <hint type="destinationlabel">
      <x>197</x>
@@ -1405,8 +1437,8 @@
      <y>348</y>
     </hint>
     <hint type="destinationlabel">
-     <x>115</x>
-     <y>373</y>
+     <x>117</x>
+     <y>394</y>
     </hint>
    </hints>
   </connection>
@@ -1417,8 +1449,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>19</x>
-     <y>402</y>
+     <x>21</x>
+     <y>421</y>
     </hint>
     <hint type="destinationlabel">
      <x>149</x>
@@ -1449,8 +1481,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>58</x>
-     <y>401</y>
+     <x>60</x>
+     <y>421</y>
     </hint>
     <hint type="destinationlabel">
      <x>331</x>

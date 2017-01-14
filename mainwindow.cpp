@@ -139,7 +139,7 @@ void MainWindow::on_pushButtonAddFolder_clicked() {
 		// If item already exists, don't add it
 		for (int i = 0; i < ui->listWidgetFoldersToBackup->count(); ++i) {
 
-			if (dirAdd.indexOf(ui->listWidgetFoldersToBackup->item(i)->text()) != -1 ) {
+			if (dirAdd.indexOf(ui->listWidgetFoldersToBackup->item(i)->text() + "/") != -1 ) {
 				QMessageBox::information(this, "Attention",
 										 "The selected folder, or a parent of it, is already in the list!\nIt won't be added.", 0x00000400);	// 0x00000400 ==>> StandardButtons button = Ok
 				return;

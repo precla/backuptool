@@ -130,7 +130,7 @@ public:
     QGroupBox *groupBoxOutput;
     QTextBrowser *textOutputOfBackup;
     QGroupBox *iDidNotKnewWhatElseToPutHere;
-    QWidget *widget;
+    QWidget *layoutWidget1;
     QVBoxLayout *verticalLayout_7;
     QLabel *labelQuotePartOne;
     QHBoxLayout *horizontalLayout_8;
@@ -630,15 +630,15 @@ public:
         iDidNotKnewWhatElseToPutHere->setObjectName(QStringLiteral("iDidNotKnewWhatElseToPutHere"));
         iDidNotKnewWhatElseToPutHere->setGeometry(QRect(420, 300, 421, 101));
         iDidNotKnewWhatElseToPutHere->setFont(font1);
-        widget = new QWidget(iDidNotKnewWhatElseToPutHere);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(20, 19, 381, 71));
-        verticalLayout_7 = new QVBoxLayout(widget);
+        layoutWidget1 = new QWidget(iDidNotKnewWhatElseToPutHere);
+        layoutWidget1->setObjectName(QStringLiteral("layoutWidget1"));
+        layoutWidget1->setGeometry(QRect(20, 19, 381, 71));
+        verticalLayout_7 = new QVBoxLayout(layoutWidget1);
         verticalLayout_7->setSpacing(6);
         verticalLayout_7->setContentsMargins(11, 11, 11, 11);
         verticalLayout_7->setObjectName(QStringLiteral("verticalLayout_7"));
         verticalLayout_7->setContentsMargins(0, 0, 0, 0);
-        labelQuotePartOne = new QLabel(widget);
+        labelQuotePartOne = new QLabel(layoutWidget1);
         labelQuotePartOne->setObjectName(QStringLiteral("labelQuotePartOne"));
         QFont font2;
         font2.setPointSize(14);
@@ -653,7 +653,7 @@ public:
 
         horizontalLayout_8->addItem(horizontalSpacer_2);
 
-        labelQuotePartTwo = new QLabel(widget);
+        labelQuotePartTwo = new QLabel(layoutWidget1);
         labelQuotePartTwo->setObjectName(QStringLiteral("labelQuotePartTwo"));
         labelQuotePartTwo->setFont(font2);
 
@@ -674,6 +674,35 @@ public:
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         MainWindow->setStatusBar(statusBar);
+        QWidget::setTabOrder(listWidgetFoldersToBackup, pushButtonAddFolder);
+        QWidget::setTabOrder(pushButtonAddFolder, pushButtonRemoveFolder);
+        QWidget::setTabOrder(pushButtonRemoveFolder, comboBoxBackupType);
+        QWidget::setTabOrder(comboBoxBackupType, checkBoxCompressionTrue);
+        QWidget::setTabOrder(checkBoxCompressionTrue, spinBoxBackupFrequencyPerDay);
+        QWidget::setTabOrder(spinBoxBackupFrequencyPerDay, checkBoxMon);
+        QWidget::setTabOrder(checkBoxMon, checkBoxTue);
+        QWidget::setTabOrder(checkBoxTue, checkBoxWed);
+        QWidget::setTabOrder(checkBoxWed, checkBoxThu);
+        QWidget::setTabOrder(checkBoxThu, checkBoxFri);
+        QWidget::setTabOrder(checkBoxFri, checkBoxSat);
+        QWidget::setTabOrder(checkBoxSat, checkBoxSun);
+        QWidget::setTabOrder(checkBoxSun, checkBoxEveryDay);
+        QWidget::setTabOrder(checkBoxEveryDay, comboBoxCompressionLevel);
+        QWidget::setTabOrder(comboBoxCompressionLevel, checkBoxCompressionMultipleParts);
+        QWidget::setTabOrder(checkBoxCompressionMultipleParts, compressionSizeCustom);
+        QWidget::setTabOrder(compressionSizeCustom, comboBoxCompressionSizeType);
+        QWidget::setTabOrder(comboBoxCompressionSizeType, checkBoxLocalBackup);
+        QWidget::setTabOrder(checkBoxLocalBackup, pushButtonBrowseBackupDestination);
+        QWidget::setTabOrder(pushButtonBrowseBackupDestination, lineBackupFolderLocal);
+        QWidget::setTabOrder(lineBackupFolderLocal, checkBoxRemoteBackup);
+        QWidget::setTabOrder(checkBoxRemoteBackup, lineEditFtpIp);
+        QWidget::setTabOrder(lineEditFtpIp, lineEditFtpPort);
+        QWidget::setTabOrder(lineEditFtpPort, lineEditFtpUsername);
+        QWidget::setTabOrder(lineEditFtpUsername, lineEditFtpPassword);
+        QWidget::setTabOrder(lineEditFtpPassword, lineEditFtpDirectory);
+        QWidget::setTabOrder(lineEditFtpDirectory, buttonCancelBackup);
+        QWidget::setTabOrder(buttonCancelBackup, buttonViewErrorLog);
+        QWidget::setTabOrder(buttonViewErrorLog, textOutputOfBackup);
 
         menuBar->addAction(menuFile->menuAction());
         menuBar->addAction(menuHelp->menuAction());
