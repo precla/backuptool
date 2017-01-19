@@ -129,6 +129,7 @@ public:
     QSpacerItem *horizontalSpacerErrors;
     QGroupBox *groupBoxOutput;
     QTextBrowser *textOutputOfBackup;
+    QPushButton *startBackupButton;
     QGroupBox *iDidNotKnewWhatElseToPutHere;
     QWidget *layoutWidget1;
     QVBoxLayout *verticalLayout_7;
@@ -624,8 +625,11 @@ public:
         groupBoxOutput->setFont(font1);
         textOutputOfBackup = new QTextBrowser(groupBoxOutput);
         textOutputOfBackup->setObjectName(QStringLiteral("textOutputOfBackup"));
-        textOutputOfBackup->setGeometry(QRect(10, 15, 820, 70));
+        textOutputOfBackup->setGeometry(QRect(10, 15, 701, 70));
         textOutputOfBackup->setFont(font1);
+        startBackupButton = new QPushButton(groupBoxOutput);
+        startBackupButton->setObjectName(QStringLiteral("startBackupButton"));
+        startBackupButton->setGeometry(QRect(720, 15, 111, 70));
         iDidNotKnewWhatElseToPutHere = new QGroupBox(centralWidget);
         iDidNotKnewWhatElseToPutHere->setObjectName(QStringLiteral("iDidNotKnewWhatElseToPutHere"));
         iDidNotKnewWhatElseToPutHere->setGeometry(QRect(420, 300, 421, 101));
@@ -777,6 +781,7 @@ public:
         labelErrorsDuringBackup->setText(QApplication::translate("MainWindow", "Errors during backup:", Q_NULLPTR));
         buttonViewErrorLog->setText(QApplication::translate("MainWindow", "View Error Log", Q_NULLPTR));
         groupBoxOutput->setTitle(QApplication::translate("MainWindow", "Output", Q_NULLPTR));
+        startBackupButton->setText(QApplication::translate("MainWindow", "Start Backup", Q_NULLPTR));
         iDidNotKnewWhatElseToPutHere->setTitle(QApplication::translate("MainWindow", "Quote of backupTool:", Q_NULLPTR));
         labelQuotePartOne->setText(QApplication::translate("MainWindow", "A backup a day", Q_NULLPTR));
         labelQuotePartTwo->setText(QApplication::translate("MainWindow", "keeps the recovery tool away!", Q_NULLPTR));
