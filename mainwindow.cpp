@@ -171,19 +171,6 @@ void MainWindow::on_pushButtonBrowseBackupDestination_clicked() {
 		}
 	}
 
-	/* remove or comment from here to testWriteFile.remove(); for production/release
-	   the following lines have been used for debugging *
-	QFile testWriteFile(dirAdd + '/' + "testFileBCKP_Log.txt");
-	
-	if (testWriteFile.open(QIODevice::ReadWrite)) {
-		// write to a log file that folder is writeable
-		QTextStream stream(&testWriteFile);
-		stream << QDateTime::currentDateTime().toString() << endl;
-	}
-	testWriteFile.close();
-	testWriteFile.remove();
-	/* remove or comment to here for production/release */
-
 	if (!dirAdd.isEmpty()) {
 		ui->lineBackupFolderLocal->insert(dirAdd);
 	} else {
