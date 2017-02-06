@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "aboutdialog.h"
+#include "backup.h"
 #include "compression.h"
 #include "ftp.h"
 #include "GeneratedFiles\ui_mainwindow.h"
@@ -161,7 +162,7 @@ void MainWindow::on_pushButtonBrowseBackupDestination_clicked() {
 	QString dirAdd = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
 														  QDir::homePath(), QFileDialog::ShowDirsOnly);
 	
-	// If backup destination folder is a Parent or child of backup fodlers, don't use it!
+	// If backup destination folder is a Parent or child of backup folders, don't use it!
 	for (int i = 0; i < ui->listWidgetFoldersToBackup->count(); ++i) {
 
 		if (dirAdd.indexOf(ui->listWidgetFoldersToBackup->item(i)->text() + "/") != -1) {
@@ -177,3 +178,18 @@ void MainWindow::on_pushButtonBrowseBackupDestination_clicked() {
 		QMessageBox::information(this, "Attention", "No destination Folder selected.", 0x00000400);
 	}
 }
+
+void MainWindow::on_startBackupButton_clicked() {
+	
+	int backupStatus = startBackup(ui->listWidgetFoldersToBackup, ui->lineBackupFolderLocal->text());
+	
+	// TODO: write to Log: status of backup
+	if (backupStatus) {
+		// Backup finished
+	} else if (backupStatus == 1) {
+		// Backup finished with errors
+	} else if (backupStatus == 2) {
+		// Backup Failed
+	}
+}
+

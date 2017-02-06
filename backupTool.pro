@@ -14,10 +14,16 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    aboutdialog.cpp
+        aboutdialog.cpp \
+        backup.cpp \
+        compression.cpp \
+        ftp.cpp
 
 HEADERS  += mainwindow.h \
-    aboutdialog.h
+        aboutdialog.h \
+        backup.h \
+        compression.h \
+        ftp.h
 
 FORMS    += mainwindow.ui \
-    aboutdialog.ui
+        aboutdialog.ui

@@ -1,6 +1,10 @@
 #include "mainwindow.h"
 #include "backup.h"
 
+#define SUCCESSCOPY 0
+#define SUCCESCREATE 1
+#define FAIL 2
+
 int startBackup(QListWidget *folderList, QString localBackupFolder) {
 	QMessageBox msgBox;
 	
@@ -12,13 +16,20 @@ int startBackup(QListWidget *folderList, QString localBackupFolder) {
 	}	
 	
 	QString dateTime = QDateTime::currentDateTime().toString();
+	dateTime.replace(':', '_');
 
 #ifdef _DEBUG
-	QFile logFile("D:/Backup/Test/log-" + dateTime.replace(':', '_') + ".txt");
-#else
-	QFile logFile(localBackupFolder + "/log-" + dateTime.replace(':', '_') + ".txt");
+	localBackupFolder = "D:/Backup/Test";
 #endif // _DEBUG
-	
+
+	QDir backupDir;
+	backupDir.mkpath(localBackupFolder);
+
+	QDir::setCurrent(localBackupFolder);
+	backupDir.mkdir(dateTime);
+
+	QFile logFile("log-" + dateTime + ".txt");
+
 	if (!logFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
 		msgBox.setText("Failed to create log file!");
 		msgBox.exec();
@@ -31,7 +42,7 @@ int startBackup(QListWidget *folderList, QString localBackupFolder) {
 	logFileOutput << "Backup started at: " << dateTime << endl;
 	
 	// start backup
-	bool copyStatus = copyContent(folderList, localBackupFolder, logFileOutput);
+	bool copyStatus = copyContent(folderList, localBackupFolder + '/' + dateTime, logFileOutput, dateTime);
 
 	dateTime = QDateTime::currentDateTime().toString();
 	logFileOutput << "Backup finished successfully at: " << dateTime << endl;
@@ -39,47 +50,87 @@ int startBackup(QListWidget *folderList, QString localBackupFolder) {
 	return 0;
 }
 
-bool copyContent(QListWidget *folderList, QString localBackupFolder, QTextStream &logFileOutput) {
+bool copyContent(QListWidget *folderList, QString localBackupFolder, QTextStream &logFileOutput, QString dateTime) {
 	// How about we start with the first folder in the list?
 	QDirIterator dirIterator(folderList->item(0)->text());
 
-	QString folderToCopy, folderToCopyNoPath;
-
-	QDir backupDir = localBackupFolder;
-	
-	unsigned int i = 0;
-
+	QString folderToCopy, folderToCopyWithoutPath;
+		
+	// iterate trough all the fodlers in the list
 	while (dirIterator.hasNext()) {
-		// get the name of the current Directory without the Path
+		// get the name of the current Directory and send it to the copy function
+		folderToCopy = folderList->item(0)->text();
+		
+		folderToCopyWithoutPath = folderToCopy;
+		folderToCopyWithoutPath = folderToCopyWithoutPath.remove(0, folderToCopy.lastIndexOf('/') + 1);
 
-		folderToCopy = folderList->item(i)->text();
-
-		folderToCopyNoPath = folderToCopy;
-		folderToCopyNoPath.remove(0, folderList->item(i)->text().lastIndexOf("\/") + 1);
-
-		// now that we've got the name of the Dir, create it < .mkdir() >
-		// before that: if backupDir does not exist, create it! < .mkpath() >
-
-		if (!backupDir.mkpath(backupDir.path())) {
-			logFileOutput << "Failed to create backup folder path: " << backupDir.path()
-				<< QDateTime::currentDateTime().toString() << endl;
-		}
-
-		if (!backupDir.mkdir(folderToCopyNoPath)) {
-			logFileOutput << "Failed to create subfolder: " 
-				<< QDateTime::currentDateTime().toString() << folderToCopy << endl;
-		}
-
-		if (QFile::copy(folderToCopy, localBackupFolder)) {
-			logFileOutput << "Successfully copied folder: " << folderToCopy
-				<< QDateTime::currentDateTime().toString() << ", to: " << localBackupFolder << endl;
-		} else {
-			logFileOutput << "Could not create folder: " << folderToCopy
-				<< QDateTime::currentDateTime().toString() << ", in: " << localBackupFolder << endl;
-		}
-
-		i++;
+		copy_dir_recursive(folderToCopy, localBackupFolder + '/' + folderToCopyWithoutPath, true, logFileOutput);
+		
+		dirIterator.next();
 	}
 
 	return true;
+}
+
+// following function taken from:
+// https://gzeki.com/blog/view/Recursive_copy_files_from_one_directory_to_another_in_C++_(Qt_5)
+
+bool copy_dir_recursive(QString from_dir, QString to_dir, bool replace_on_conflit, QTextStream &logFileOutput) {
+	QDir dir;
+	dir.setPath(from_dir);
+
+	from_dir += '/';
+	to_dir += '/';
+
+	foreach(QString copy_file, dir.entryList(QDir::Files)) {
+		QString from = from_dir + copy_file;
+		QString to = to_dir + copy_file;
+
+		if (QFile::exists(to)) {
+			if (replace_on_conflit) {
+				if (QFile::remove(to) == false) {
+					return false;
+				}
+			} else {
+				continue;
+			}
+		}
+
+		if (QFile::copy(from, to) == false) {
+			return false;
+		} else {
+			writeLog(logFileOutput, to, SUCCESSCOPY);
+		}
+	}
+
+	foreach(QString copy_dir, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+		QString from = from_dir + copy_dir;
+		QString to = to_dir + copy_dir;
+
+		if (dir.mkpath(to) == false) {
+			return false;
+		} else {
+			writeLog(logFileOutput, to, SUCCESCREATE);
+		}
+
+		if (copy_dir_recursive(from, to, replace_on_conflit, logFileOutput) == false) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+void writeLog(QTextStream &logFileOutput, QString folder, unsigned short status) {
+
+	// write to log file and show in mainwindow
+	if (status == SUCCESCREATE) {
+		logFileOutput << "Succesfully created folder: " << folder << " " << QDateTime::currentDateTime().toString() << endl;
+	} else if (status == SUCCESSCOPY) {
+		logFileOutput << "Succesfully copied file: " << folder << " " << QDateTime::currentDateTime().toString() << endl;
+	} else if (status == FAIL) {
+		logFileOutput << "Failed to create folder: " << folder << " " << QDateTime::currentDateTime().toString() << endl;
+	}
+
+	return;
 }

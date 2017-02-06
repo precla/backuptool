@@ -2,11 +2,15 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QFile>
-#include <QFileSystemModel>
-#include <QFileDialog>
-#include <QMessageBox>
 #include <QDateTime>
+#include <QDir>
+#include <QDirIterator> 
+#include <QFile>
+#include <QFileDialog>
+#include <QFileSystemModel>
+#include <QListWidget>
+#include <QMessageBox>
+#include <QString>
 #include <QStringList>
 #include <QTextStream>
 #include "aboutdialog.h"
@@ -34,6 +38,8 @@ public:
 	void on_pushButtonAddFolder_clicked();
 	void on_pushButtonRemoveFolder_clicked();
 	void on_pushButtonBrowseBackupDestination_clicked();
+
+	void on_startBackupButton_clicked();
 
 private:
 	bool saveSettingsToCfg();
