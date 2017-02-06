@@ -125,11 +125,11 @@ void writeLog(QTextStream &logFileOutput, QString folder, unsigned short status)
 
 	// write to log file and show in mainwindow
 	if (status == SUCCESCREATE) {
-		logFileOutput << "Succesfully created folder: " << folder << " " << QDateTime::currentDateTime().toString() << endl;
+		logFileOutput << "Succesfully created folder: " << folder << " " << QDateTime::currentMSecsSinceEpoch() << endl;
 	} else if (status == SUCCESSCOPY) {
-		logFileOutput << "Succesfully copied file: " << folder << " " << QDateTime::currentDateTime().toString() << endl;
+		logFileOutput << "Succesfully copied file: " << folder << " " << QDateTime::currentMSecsSinceEpoch() << endl;
 	} else if (status == FAIL) {
-		logFileOutput << "Failed to create folder: " << folder << " " << QDateTime::currentDateTime().toString() << endl;
+		logFileOutput << "Failed to create folder: " << folder << " " << QDateTime::currentMSecsSinceEpoch() << endl;
 	}
 
 	return;
