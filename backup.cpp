@@ -1,3 +1,5 @@
+#pragma once
+
 #include "mainwindow.h"
 #include "backup.h"
 
@@ -5,7 +7,7 @@
 #define SUCCESCREATE 1
 #define FAIL 2
 
-int startBackup(QListWidget *folderList, QString localBackupFolder) {
+int startBackup(QListWidget *folderList, QString localBackupFolder, unsigned int *numFilesAndFolders) {
 	QMessageBox msgBox;
 	
 	// check if any folder is selected
@@ -13,10 +15,21 @@ int startBackup(QListWidget *folderList, QString localBackupFolder) {
 		msgBox.setText("No folder(s) selected");
 		msgBox.exec();
 		return 2;
-	}	
+	}
+
+	QDate currDate = QDate::currentDate();
+	int year = currDate.year();
+	int month = currDate.month();
+	int day = currDate.day();
 	
-	QString dateTime = QDateTime::currentDateTime().toString();
-	dateTime.replace(':', '_');
+	QTime currTime = QTime::currentTime();
+	int hours = currTime.hour();
+	int minutes = currTime.minute();
+	int seconds = currTime.second();
+
+	//QString dateTime = year + QDateTime::currentDateTime().toString();
+	QString dateTime = QString::number(year) + '_' + QString::number(month) + '_' + QString::number(day)
+						+ '_' + QString::number(hours) + '-' + QString::number(minutes) + '-' + QString::number(seconds);
 
 #ifdef _DEBUG
 	localBackupFolder = "D:/Backup/Test";
@@ -39,48 +52,66 @@ int startBackup(QListWidget *folderList, QString localBackupFolder) {
 
 	QTextStream logFileOutput(&logFile);
 		
-	logFileOutput << "Backup started at: " << dateTime << endl;
+	logFileOutput << "Backup started at: " << QDateTime::currentDateTime().toString() << endl;
 	
 	// start backup
-	bool copyStatus = copyContent(folderList, localBackupFolder + '/' + dateTime, logFileOutput, dateTime);
+	copyContent(*folderList, localBackupFolder + '/' + dateTime, logFileOutput, dateTime, numFilesAndFolders);
 
-	dateTime = QDateTime::currentDateTime().toString();
-	logFileOutput << "Backup finished successfully at: " << dateTime << endl;
+	logFileOutput << "Backup finished at: " << QDateTime::currentDateTime().toString() << endl;
 	
 	return 0;
 }
 
-bool copyContent(QListWidget *folderList, QString localBackupFolder, QTextStream &logFileOutput, QString dateTime) {
-	// How about we start with the first folder in the list?
-	QDirIterator dirIterator(folderList->item(0)->text());
-
+void copyContent(QListWidget &folderList, QString localBackupFolder, QTextStream &logFileOutput, QString dateTime, unsigned int *numFilesAndFolders) {
+	int folderCount = folderList.count();
+	
 	QString folderToCopy, folderToCopyWithoutPath;
-		
-	// iterate trough all the fodlers in the list
-	while (dirIterator.hasNext()) {
-		// get the name of the current Directory and send it to the copy function
-		folderToCopy = folderList->item(0)->text();
-		
+
+	// iterate trough all the folders in the list
+	while (folderCount > 0) {
+
+		folderToCopy = folderList.item(folderCount - 1)->text();
+
 		folderToCopyWithoutPath = folderToCopy;
 		folderToCopyWithoutPath = folderToCopyWithoutPath.remove(0, folderToCopy.lastIndexOf('/') + 1);
 
-		copy_dir_recursive(folderToCopy, localBackupFolder + '/' + folderToCopyWithoutPath, true, logFileOutput);
-		
-		dirIterator.next();
+		copy_dir_recursive(folderToCopy, localBackupFolder + '/' + folderToCopyWithoutPath, true, logFileOutput, numFilesAndFolders);
+
+		folderCount--;
 	}
 
-	return true;
+	return;
 }
 
 // following function taken from:
 // https://gzeki.com/blog/view/Recursive_copy_files_from_one_directory_to_another_in_C++_(Qt_5)
+// My modifications: 
+// - changed the foreach, first the one for Directories, then the one for Files.. the original function did not copy properly
+// - exchanged QDir::separator() with += '/'
 
-bool copy_dir_recursive(QString from_dir, QString to_dir, bool replace_on_conflit, QTextStream &logFileOutput) {
+bool copy_dir_recursive(QString from_dir, QString to_dir, bool replace_on_conflit, QTextStream &logFileOutput, unsigned int *numFilesAndFolders) {
 	QDir dir;
 	dir.setPath(from_dir);
 
 	from_dir += '/';
 	to_dir += '/';
+
+	numFilesAndFolders[0]++;
+
+	foreach(QString copy_dir, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+		QString from = from_dir + copy_dir;
+		QString to = to_dir + copy_dir;
+
+		if (dir.mkpath(to) == false) {
+			return false;
+		} else {
+			writeLog(logFileOutput, to, SUCCESCREATE);
+		}
+
+		if (copy_dir_recursive(from, to, replace_on_conflit, logFileOutput, numFilesAndFolders) == false) {
+			return false;
+		}
+	}
 
 	foreach(QString copy_file, dir.entryList(QDir::Files)) {
 		QString from = from_dir + copy_file;
@@ -99,22 +130,8 @@ bool copy_dir_recursive(QString from_dir, QString to_dir, bool replace_on_confli
 		if (QFile::copy(from, to) == false) {
 			return false;
 		} else {
+			numFilesAndFolders[1]++;
 			writeLog(logFileOutput, to, SUCCESSCOPY);
-		}
-	}
-
-	foreach(QString copy_dir, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
-		QString from = from_dir + copy_dir;
-		QString to = to_dir + copy_dir;
-
-		if (dir.mkpath(to) == false) {
-			return false;
-		} else {
-			writeLog(logFileOutput, to, SUCCESCREATE);
-		}
-
-		if (copy_dir_recursive(from, to, replace_on_conflit, logFileOutput) == false) {
-			return false;
 		}
 	}
 
@@ -124,6 +141,7 @@ bool copy_dir_recursive(QString from_dir, QString to_dir, bool replace_on_confli
 void writeLog(QTextStream &logFileOutput, QString folder, unsigned short status) {
 
 	// write to log file and show in mainwindow
+	// TODO: show in main window
 	if (status == SUCCESCREATE) {
 		logFileOutput << "Succesfully created folder: " << folder << " " << QDateTime::currentMSecsSinceEpoch() << endl;
 	} else if (status == SUCCESSCOPY) {
@@ -131,6 +149,6 @@ void writeLog(QTextStream &logFileOutput, QString folder, unsigned short status)
 	} else if (status == FAIL) {
 		logFileOutput << "Failed to create folder: " << folder << " " << QDateTime::currentMSecsSinceEpoch() << endl;
 	}
-
+	
 	return;
 }

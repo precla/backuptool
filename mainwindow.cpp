@@ -136,16 +136,29 @@ void MainWindow::on_actionAbout_triggered() {
 void MainWindow::on_pushButtonAddFolder_clicked() {
 	QString dirAdd = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
 														  QDir::homePath(), QFileDialog::ShowDirsOnly);
+
+	QString dirAddCheck = dirAdd + '/';
+
 	if (!dirAdd.isEmpty()) {
 		// If item already exists, don't add it
 		for (int i = 0; i < ui->listWidgetFoldersToBackup->count(); ++i) {
 
-			if (dirAdd.indexOf(ui->listWidgetFoldersToBackup->item(i)->text() + "/") != -1 ) {
+			if (dirAddCheck.indexOf(ui->listWidgetFoldersToBackup->item(i)->text() + '/') != -1 ) {
 				QMessageBox::information(this, "Attention",
 										 "The selected folder, or a parent of it, is already in the list!\nIt won't be added.", 0x00000400);	// 0x00000400 ==>> StandardButtons button = Ok
 				return;
 			}
 		}
+
+		for (int i = 0; i < ui->listWidgetFoldersToBackup->count(); ++i) {
+
+			if (ui->listWidgetFoldersToBackup->item(i)->text().indexOf(dirAddCheck) != -1) {
+				QMessageBox::information(this, "Attention",
+					"The selected folder, or a child of it, is already in the list!\nIt won't be added.", 0x00000400);	// 0x00000400 ==>> StandardButtons button = Ok
+				return;
+			}
+		}
+
 		ui->listWidgetFoldersToBackup->addItem(dirAdd);
 	}
 }
@@ -181,15 +194,20 @@ void MainWindow::on_pushButtonBrowseBackupDestination_clicked() {
 
 void MainWindow::on_startBackupButton_clicked() {
 	
-	int backupStatus = startBackup(ui->listWidgetFoldersToBackup, ui->lineBackupFolderLocal->text());
+	ui->textOutputOfBackup->append("Starting backup...");
+
+	// [0] -> Folders, [1] -> Files
+	unsigned int numFilesAndFolders[2] = {0, 0};
 	
+	int backupStatus = startBackup(ui->listWidgetFoldersToBackup, ui->lineBackupFolderLocal->text(), numFilesAndFolders);
+
 	// TODO: write to Log: status of backup
-	if (backupStatus) {
-		// Backup finished
+	if (backupStatus == 0) {
+		ui->textOutputOfBackup->append("Backup succeeded with " + QString::number(numFilesAndFolders[0])
+								+ " Folders and " + QString::number(numFilesAndFolders[1]) + " Files copied.");
 	} else if (backupStatus == 1) {
-		// Backup finished with errors
+		ui->textOutputOfBackup->append("Problem with Log files");
 	} else if (backupStatus == 2) {
-		// Backup Failed
+		ui->textOutputOfBackup->append("Backup Failed!");
 	}
 }
-
