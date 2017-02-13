@@ -203,7 +203,7 @@ void MainWindow::on_startBackupButton_clicked() {
 
 	// TODO: write to Log: status of backup
 	if (backupStatus == 0) {
-		ui->textOutputOfBackup->append("Backup succeeded with " + QString::number(numFilesAndFolders[0])
+		ui->textOutputOfBackup->append("Backup finished with " + QString::number(numFilesAndFolders[0])
 								+ " Folders and " + QString::number(numFilesAndFolders[1]) + " Files copied.");
 	} else if (backupStatus == 1) {
 		ui->textOutputOfBackup->append("Problem with Log files");
