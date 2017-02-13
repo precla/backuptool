@@ -16,7 +16,7 @@ int startBackup(QListWidget *folderList, QString localBackupFolder, unsigned int
 		msgBox.exec();
 		return 2;
 	}
-
+	
 	QDate currDate = QDate::currentDate();
 	int year = currDate.year();
 	int month = currDate.month();
@@ -55,6 +55,7 @@ int startBackup(QListWidget *folderList, QString localBackupFolder, unsigned int
 	logFileOutput << "Backup started at: " << QDateTime::currentDateTime().toString() << endl;
 	
 	// start backup
+
 	copyContent(*folderList, localBackupFolder + '/' + dateTime, logFileOutput, dateTime, numFilesAndFolders);
 
 	logFileOutput << "Backup finished at: " << QDateTime::currentDateTime().toString() << endl;
@@ -74,7 +75,7 @@ void copyContent(QListWidget &folderList, QString localBackupFolder, QTextStream
 
 		folderToCopyWithoutPath = folderToCopy;
 		folderToCopyWithoutPath = folderToCopyWithoutPath.remove(0, folderToCopy.lastIndexOf('/') + 1);
-
+		
 		copy_dir_recursive(folderToCopy, localBackupFolder + '/' + folderToCopyWithoutPath, true, logFileOutput, numFilesAndFolders);
 
 		folderCount--;

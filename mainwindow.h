@@ -28,6 +28,8 @@ protected:
 public:
 	explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
+	Ui::MainWindow *ui;
+
 	//bool saveSettingsToCfg();
 
 	private slots:
@@ -44,8 +46,6 @@ public:
 private:
 	bool saveSettingsToCfg();
 	bool askToSaveSettings();
-
-	Ui::MainWindow *ui;
 
 };
 
