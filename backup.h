@@ -9,7 +9,12 @@
 #include <QStringList>
 #include <QTextStream>
 
-int startBackup(QListWidget *, QString, unsigned int *);
-void copyContent(QListWidget &, QString, QTextStream &, QString, unsigned int *);
-bool copy_dir_recursive(QString, QString, bool, QTextStream &, unsigned int *);
+bool copyDirRecursive(QString, QString, bool, QTextStream &, unsigned int *, QProgressBar *);
+
+int startBackup(QListWidget *, QString, unsigned int *, QProgressBar *);
+
+unsigned long countFilesAndFolders(QListWidget &);
+unsigned long countFileSize(const QString &);
+
+void copyContent(QListWidget &, QString, QTextStream &, QString, unsigned int *, QProgressBar *);
 void writeLog(QTextStream &, QString, unsigned short);

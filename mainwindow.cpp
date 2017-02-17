@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	/*
 		Backup Progress groupbox
 	*/
-	ui->progressBarBackup->setValue(0);
+	ui->progressBarBackup->reset();
 	ui->errorCounter->intValue();
 
 	/*
@@ -198,8 +198,14 @@ void MainWindow::on_startBackupButton_clicked() {
 
 	// [0] -> Folders, [1] -> Files
 	unsigned int numFilesAndFolders[2] = {0, 0};
+	unsigned long sizeToCopy = countFilesAndFolders(*ui->listWidgetFoldersToBackup);
 	
-	int backupStatus = startBackup(ui->listWidgetFoldersToBackup, ui->lineBackupFolderLocal->text(), numFilesAndFolders);
+	// reset and set ProgressBar values
+	ui->progressBarBackup->reset();
+	ui->progressBarBackup->setRange(0, sizeToCopy);
+
+	// start backup
+	int backupStatus = startBackup(ui->listWidgetFoldersToBackup, ui->lineBackupFolderLocal->text(), numFilesAndFolders, ui->progressBarBackup);
 
 	// TODO: write to Log: status of backup
 	if (backupStatus == 0) {

@@ -10,6 +10,7 @@
 #include <QFileSystemModel>
 #include <QListWidget>
 #include <QMessageBox>
+#include <QProgressbar>
 #include <QString>
 #include <QStringList>
 #include <QTextStream>

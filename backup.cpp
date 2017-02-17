@@ -7,7 +7,7 @@
 #define SUCCESCREATE 1
 #define FAIL 2
 
-int startBackup(QListWidget *folderList, QString localBackupFolder, unsigned int *numFilesAndFolders) {
+int startBackup(QListWidget *folderList, QString localBackupFolder, unsigned int *numFilesAndFolders, QProgressBar *progressBar) {
 	QMessageBox msgBox;
 	
 	// check if any folder is selected
@@ -51,19 +51,22 @@ int startBackup(QListWidget *folderList, QString localBackupFolder, unsigned int
 	}
 
 	QTextStream logFileOutput(&logFile);
-		
-	logFileOutput << "Backup started at: " << QDateTime::currentDateTime().toString() << endl;
+
+	// calculate Size of all Files
+	unsigned long totalFilesAndFoldersSize = countFilesAndFolders(*folderList);
 	
 	// start backup
+	logFileOutput << "Backup started at: " << QDateTime::currentDateTime().toString() << endl;
+		
+	copyContent(*folderList, localBackupFolder + '/' + dateTime, logFileOutput, dateTime, numFilesAndFolders, progressBar);
 
-	copyContent(*folderList, localBackupFolder + '/' + dateTime, logFileOutput, dateTime, numFilesAndFolders);
-
+	// end backup
 	logFileOutput << "Backup finished at: " << QDateTime::currentDateTime().toString() << endl;
 	
 	return 0;
 }
 
-void copyContent(QListWidget &folderList, QString localBackupFolder, QTextStream &logFileOutput, QString dateTime, unsigned int *numFilesAndFolders) {
+void copyContent(QListWidget &folderList, QString localBackupFolder, QTextStream &logFileOutput, QString dateTime, unsigned int *numFilesAndFolders, QProgressBar *progressBar) {
 	int folderCount = folderList.count();
 	
 	QString folderToCopy, folderToCopyWithoutPath;
@@ -76,7 +79,7 @@ void copyContent(QListWidget &folderList, QString localBackupFolder, QTextStream
 		folderToCopyWithoutPath = folderToCopy;
 		folderToCopyWithoutPath = folderToCopyWithoutPath.remove(0, folderToCopy.lastIndexOf('/') + 1);
 		
-		copy_dir_recursive(folderToCopy, localBackupFolder + '/' + folderToCopyWithoutPath, true, logFileOutput, numFilesAndFolders);
+		copyDirRecursive(folderToCopy, localBackupFolder + '/' + folderToCopyWithoutPath, true, logFileOutput, numFilesAndFolders, progressBar);
 
 		folderCount--;
 	}
@@ -89,8 +92,9 @@ void copyContent(QListWidget &folderList, QString localBackupFolder, QTextStream
 // My modifications: 
 // - changed the foreach, first the one for Directories, then the one for Files.. the original function did not copy properly
 // - exchanged QDir::separator() with += '/'
+// - others
 
-bool copy_dir_recursive(QString from_dir, QString to_dir, bool replace_on_conflit, QTextStream &logFileOutput, unsigned int *numFilesAndFolders) {
+bool copyDirRecursive(QString from_dir, QString to_dir, bool replace_on_conflit, QTextStream &logFileOutput, unsigned int *numFilesAndFolders, QProgressBar *progressBar) {
 	QDir dir;
 	dir.setPath(from_dir);
 
@@ -109,12 +113,12 @@ bool copy_dir_recursive(QString from_dir, QString to_dir, bool replace_on_confli
 			writeLog(logFileOutput, to, SUCCESCREATE);
 		}
 
-		if (copy_dir_recursive(from, to, replace_on_conflit, logFileOutput, numFilesAndFolders) == false) {
+		if (copyDirRecursive(from, to, replace_on_conflit, logFileOutput, numFilesAndFolders, progressBar) == false) {
 			return false;
 		}
 	}
 
-	foreach(QString copy_file, dir.entryList(QDir::Files)) {
+	foreach(QString copy_file, dir.entryList(QDir::Files | QDir::Hidden)) {
 		QString from = from_dir + copy_file;
 		QString to = to_dir + copy_file;
 
@@ -152,4 +156,35 @@ void writeLog(QTextStream &logFileOutput, QString folder, unsigned short status)
 	}
 	
 	return;
+}
+
+unsigned long countFilesAndFolders(QListWidget &folderList) {
+	// take the .count because otherwise it would skip counting the starting folders
+	unsigned long totalSize = 0;
+	unsigned int folderCount = folderList.count();
+
+	while (folderCount > 0) {
+		QDir startDir(folderList.item(folderCount - 1)->text());
+
+		totalSize += countFileSize(startDir.path());
+
+		folderCount--;
+	}
+	
+	return totalSize;
+}
+
+unsigned long countFileSize(const QString &startDirPath) {
+	unsigned long filesTotalSize = 0;
+	QDir dir(startDirPath);
+
+	foreach(QString file, dir.entryList(QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot)) {
+		filesTotalSize += QFileInfo(dir, file).size();
+	}
+
+	foreach(QString subFolder, dir.entryList(QDir::Dirs | QDir::Hidden | QDir::NoDotAndDotDot)) {
+		filesTotalSize += countFileSize(startDirPath + '/' + subFolder);
+	}
+
+	return filesTotalSize;
 }
