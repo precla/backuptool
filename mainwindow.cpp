@@ -210,6 +210,13 @@ void MainWindow::on_startBackupButton_clicked() {
 	// start backup
 	int backupStatus = startBackup(ui->listWidgetFoldersToBackup, ui->lineBackupFolderLocal->text(), numFilesAndFolders, ui->progressBarBackup);
 
+	QString check = ui->progressBarBackup->text();
+	if (check != "100%") {
+		ui->textOutputOfBackup->append("Not all files & Folders were copied!");
+		ui->textOutputOfBackup->append("Only " + check + " have been copied.");
+		ui->textOutputOfBackup->append("Please check the Log file where the copie operation stopped.");
+	}
+
 	// TODO: write to Log: status of backup
 	if (backupStatus == 0) {
 		ui->textOutputOfBackup->append("Backup finished with " + QString::number(numFilesAndFolders[0])
