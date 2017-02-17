@@ -32,7 +32,7 @@ int startBackup(QListWidget *folderList, QString localBackupFolder, unsigned int
 						+ '_' + QString::number(hours) + '-' + QString::number(minutes) + '-' + QString::number(seconds);
 
 #ifdef _DEBUG
-	localBackupFolder = "D:/Backup/Test";
+	localBackupFolder = "C:/Backup/Test";
 #endif // _DEBUG
 
 	QDir backupDir;
