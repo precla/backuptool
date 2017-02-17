@@ -214,7 +214,7 @@ void MainWindow::on_startBackupButton_clicked() {
 	if (check != "100%") {
 		ui->textOutputOfBackup->append("Not all files & Folders were copied!");
 		ui->textOutputOfBackup->append("Only " + check + " have been copied.");
-		ui->textOutputOfBackup->append("Please check the Log file where the copie operation stopped.");
+		ui->textOutputOfBackup->append("Please check the Log file where the copy operation stopped.");
 	}
 
 	// TODO: write to Log: status of backup
