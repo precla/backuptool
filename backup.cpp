@@ -7,6 +7,8 @@
 #define SUCCESCREATE 1
 #define FAIL 2
 
+unsigned int progressBarNewValue = 0;
+
 int startBackup(QListWidget *folderList, QString localBackupFolder, unsigned int *numFilesAndFolders, QProgressBar *progressBar) {
 	QMessageBox msgBox;
 	
@@ -52,9 +54,6 @@ int startBackup(QListWidget *folderList, QString localBackupFolder, unsigned int
 
 	QTextStream logFileOutput(&logFile);
 
-	// calculate Size of all Files
-	unsigned long totalFilesAndFoldersSize = countFilesAndFolders(*folderList);
-	
 	// start backup
 	logFileOutput << "Backup started at: " << QDateTime::currentDateTime().toString() << endl;
 		
@@ -84,6 +83,9 @@ void copyContent(QListWidget &folderList, QString localBackupFolder, QTextStream
 		folderCount--;
 	}
 
+	// reset progressBarNewVal for next backup
+	progressBarNewValue = 0;
+	
 	return;
 }
 
@@ -121,6 +123,10 @@ bool copyDirRecursive(QString from_dir, QString to_dir, bool replace_on_conflit,
 	foreach(QString copy_file, dir.entryList(QDir::Files | QDir::Hidden)) {
 		QString from = from_dir + copy_file;
 		QString to = to_dir + copy_file;
+
+		progressBarNewValue += QFileInfo(from).size();
+
+		progressBar->setValue(progressBarNewValue);
 
 		if (QFile::exists(to)) {
 			if (replace_on_conflit) {

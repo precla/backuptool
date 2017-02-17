@@ -198,10 +198,13 @@ void MainWindow::on_startBackupButton_clicked() {
 
 	// [0] -> Folders, [1] -> Files
 	unsigned int numFilesAndFolders[2] = {0, 0};
+
+	// calculate Size of all Files
 	unsigned long sizeToCopy = countFilesAndFolders(*ui->listWidgetFoldersToBackup);
 	
 	// reset and set ProgressBar values
 	ui->progressBarBackup->reset();
+	// reduce size to MB value
 	ui->progressBarBackup->setRange(0, sizeToCopy);
 
 	// start backup
