@@ -164,9 +164,9 @@ void writeLog(QTextStream &logFileOutput, QString folder, unsigned short status)
 	return;
 }
 
-unsigned long countFilesAndFolders(QListWidget &folderList) {
+qint64 countFilesAndFolders(QListWidget &folderList) {
 	// take the .count because otherwise it would skip counting the starting folders
-	unsigned long totalSize = 0;
+	qint64 totalSize = 0;
 	unsigned int folderCount = folderList.count();
 
 	while (folderCount > 0) {
@@ -180,8 +180,8 @@ unsigned long countFilesAndFolders(QListWidget &folderList) {
 	return totalSize;
 }
 
-unsigned long countFileSize(const QString &startDirPath) {
-	unsigned long filesTotalSize = 0;
+qint64 countFileSize(const QString &startDirPath) {
+	qint64 filesTotalSize = 0;
 	QDir dir(startDirPath);
 
 	foreach(QString file, dir.entryList(QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot)) {

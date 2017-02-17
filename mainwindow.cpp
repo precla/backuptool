@@ -200,7 +200,7 @@ void MainWindow::on_startBackupButton_clicked() {
 	unsigned int numFilesAndFolders[2] = {0, 0};
 
 	// calculate Size of all Files
-	unsigned long sizeToCopy = countFilesAndFolders(*ui->listWidgetFoldersToBackup);
+	qint64 sizeToCopy = countFilesAndFolders(*ui->listWidgetFoldersToBackup);
 	
 	// reset and set ProgressBar values
 	ui->progressBarBackup->reset();

@@ -13,8 +13,8 @@ bool copyDirRecursive(QString, QString, bool, QTextStream &, unsigned int *, QPr
 
 int startBackup(QListWidget *, QString, unsigned int *, QProgressBar *);
 
-unsigned long countFilesAndFolders(QListWidget &);
-unsigned long countFileSize(const QString &);
+qint64 countFilesAndFolders(QListWidget &);
+qint64 countFileSize(const QString &);
 
 void copyContent(QListWidget &, QString, QTextStream &, QString, unsigned int *, QProgressBar *);
 void writeLog(QTextStream &, QString, unsigned short);
