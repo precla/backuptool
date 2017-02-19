@@ -49,7 +49,7 @@ int startBackup(QListWidget *folderList, QString localBackupFolder, unsigned int
 		msgBox.setText("Failed to create log file!");
 		msgBox.exec();
 		// TODO: ask User if he still wants to continue?
-		return 1;
+		// return 1;
 	}
 
 	QTextStream logFileOutput(&logFile);
@@ -105,7 +105,7 @@ bool copyDirRecursive(QString from_dir, QString to_dir, bool replace_on_conflit,
 
 	numFilesAndFolders[0]++;
 
-	foreach(QString copy_dir, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+	foreach(QString copy_dir, dir.entryList(QDir::NoSymLinks | QDir::Dirs | QDir::NoDotAndDotDot)) {
 		QString from = from_dir + copy_dir;
 		QString to = to_dir + copy_dir;
 
@@ -120,7 +120,7 @@ bool copyDirRecursive(QString from_dir, QString to_dir, bool replace_on_conflit,
 		}
 	}
 
-	foreach(QString copy_file, dir.entryList(QDir::Files | QDir::Hidden)) {
+	foreach(QString copy_file, dir.entryList(QDir::NoSymLinks | QDir::Files | QDir::Hidden)) {
 		QString from = from_dir + copy_file;
 		QString to = to_dir + copy_file;
 
@@ -184,11 +184,11 @@ qint64 countFileSize(const QString &startDirPath) {
 	qint64 filesTotalSize = 0;
 	QDir dir(startDirPath);
 
-	foreach(QString file, dir.entryList(QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot)) {
+	foreach(QString file, dir.entryList(QDir::NoSymLinks | QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot)) {
 		filesTotalSize += QFileInfo(dir, file).size();
 	}
 
-	foreach(QString subFolder, dir.entryList(QDir::Dirs | QDir::Hidden | QDir::NoDotAndDotDot)) {
+	foreach(QString subFolder, dir.entryList(QDir::NoSymLinks | QDir::Dirs | QDir::Hidden | QDir::NoDotAndDotDot)) {
 		filesTotalSize += countFileSize(startDirPath + '/' + subFolder);
 	}
 
