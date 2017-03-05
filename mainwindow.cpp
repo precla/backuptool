@@ -228,6 +228,6 @@ void MainWindow::on_startBackupButton_clicked() {
 								+ " Folders and " + QString::number(numFilesAndFolders[1]) + " Files copied."
 								+ " And " + QString::number(sizeToCopy / 1024) + " KBytes copied.");
 	} else if (backupStatus == 2) {
-		ui->textOutputOfBackup->append("Backup Failed!");
+		ui->textOutputOfBackup->append("No Folder(s) selected for backup!");
 	}
 }
