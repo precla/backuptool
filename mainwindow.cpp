@@ -196,6 +196,13 @@ void MainWindow::on_startBackupButton_clicked() {
 	
 	ui->textOutputOfBackup->append("Starting backup...");
 
+	if (!ui->checkBoxLocalBackup->isChecked() && !ui->checkBoxRemoteBackup->isChecked()) {
+		QMessageBox msgBox;
+		msgBox.setText("No backup destination selected!\nPlease choose a Folder or a FTP Server.");
+		msgBox.exec();
+		return;
+	}
+
 	// [0] -> Folders, [1] -> Files
 	unsigned int numFilesAndFolders[2] = {0, 0};
 
